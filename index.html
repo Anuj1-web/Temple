@@ -438,7 +438,7 @@ function closeMantra(){
   document.getElementById("mantraScreen").style.display = "none";
 }
 </script>
-<!-- DONATION CARDS (HOME) -->
+<!-- HOME -->
 <div id="homePage" class="section">
   <h2>सेवा एवं दान</h2>
 
@@ -456,127 +456,159 @@ function closeMantra(){
 <style>
 .page {
   display: none;
-  padding: 40px;
-  text-align: center;
+  height: 100vh;
+  background: #fff7f0;
+  padding-top: 40px;
 }
 
+/* PREMIUM FORM CARD */
 .form-card {
   background: linear-gradient(135deg, #ff6600, #cc0000);
   color: white;
-  padding: 25px;
-  border-radius: 15px;
+  padding: 30px;
+  border-radius: 20px;
   max-width: 420px;
   margin: auto;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: center;
+
+  box-shadow: 
+    0 0 20px rgba(255,102,0,0.6),
+    0 0 40px rgba(255,0,0,0.3);
+
   animation: fadeIn 0.5s ease;
 }
 
 .form-card input {
   width: 90%;
-  padding: 10px;
-  margin: 8px;
+  padding: 12px;
+  margin: 10px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
+/* BUTTON */
 .btn2 {
   background: white;
   color: #cc0000;
-  padding: 10px 20px;
+  padding: 12px 20px;
   border: none;
-  margin-top: 10px;
-  border-radius: 8px;
+  margin-top: 15px;
+  border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
 }
 
+/* BACK */
 .back {
+  text-align: center;
   margin-bottom: 20px;
+  font-weight: bold;
   cursor: pointer;
   color: #cc0000;
-  font-weight: bold;
 }
 
-#qrBox {
+/* QR PAGE */
+.qr-page {
   display: none;
-  margin-top: 20px;
+  height: 100vh;
+  background: radial-gradient(circle, #ffcc80, #ff6600);
+  text-align: center;
+  padding-top: 60px;
+}
+
+.qr-box {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  display: inline-block;
+  box-shadow: 0 0 25px rgba(0,0,0,0.3);
+}
+
+/* CLEAN QR */
+.qr-box img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover; /* 👈 important */
+  border-radius: 10px;
 }
 
 @keyframes fadeIn {
-  from {opacity:0; transform: translateY(20px);}
+  from {opacity:0; transform: translateY(30px);}
   to {opacity:1; transform: translateY(0);}
 }
 </style>
 
-<!-- Bhandara Page -->
+<!-- BHANDARA PAGE -->
 <div id="bhandaraPage" class="page">
   <div class="back" onclick="goHome()">⬅ वापस जाएं</div>
 
   <div class="form-card">
     <h3>🍛 मंदिर एवं भंडारा दान</h3>
 
-    <input id="b_name" placeholder="नाम">
-    <input id="b_father" placeholder="पिता का नाम">
-    <input id="b_address" placeholder="पता">
-    <input id="b_amount" placeholder="दान राशि">
+    <input placeholder="नाम">
+    <input placeholder="पिता का नाम">
+    <input placeholder="पता">
+    <input placeholder="दान राशि">
 
-    <button class="btn2" onclick="showQR()">Proceed to Pay</button>
-
-    <div id="qrBox">
-      <h3>भुगतान करें</h3>
-      <img src="https://github.com/Anuj1-web/Temple/blob/main/qr.png?raw=true" width="200">
-      <p>UPI से भुगतान करें</p>
-    </div>
+    <button class="btn2" onclick="openQR()">Proceed to Pay</button>
   </div>
 </div>
 
-<!-- Dhwaj Page -->
+<!-- DHWAJ PAGE -->
 <div id="dhwajPage" class="page">
   <div class="back" onclick="goHome()">⬅ वापस जाएं</div>
 
   <div class="form-card">
     <h3>🚩 ध्वज सेवा</h3>
 
-    <input id="d_name" placeholder="नाम">
-    <input id="d_father" placeholder="पिता का नाम">
-    <input id="d_address" placeholder="पता">
-    <input id="flags" placeholder="ध्वज संख्या" oninput="calculate()">
+    <input placeholder="नाम">
+    <input placeholder="पिता का नाम">
+    <input placeholder="पता">
+    <input id="flags" placeholder="ध्वज संख्या" oninput="calc()">
 
     <h3 id="total">कुल राशि: ₹0</h3>
 
-    <button class="btn2" onclick="showQR()">Proceed to Pay</button>
+    <button class="btn2" onclick="openQR()">Proceed to Pay</button>
+  </div>
+</div>
 
-    <div id="qrBox">
-      <h3>भुगतान करें</h3>
-      <img src="https://github.com/Anuj1-web/Temple/blob/main/qr.png?raw=true" width="200">
-      <p>UPI से भुगतान करें</p>
-    </div>
+<!-- QR PAGE (SEPARATE) -->
+<div id="qrPage" class="qr-page">
+  <div class="back" onclick="goHome()">⬅ वापस जाएं</div>
+
+  <div class="qr-box">
+    <h3>भुगतान करें</h3>
+    <img src="https://github.com/Anuj1-web/Temple/blob/main/qr.png?raw=true">
+    <p>UPI से भुगतान करें</p>
   </div>
 </div>
 
 <script>
-function openPage(pageId){
+function openPage(page){
   document.getElementById("homePage").style.display = "none";
   document.getElementById("bhandaraPage").style.display = "none";
   document.getElementById("dhwajPage").style.display = "none";
+  document.getElementById("qrPage").style.display = "none";
 
-  document.getElementById(pageId).style.display = "block";
+  document.getElementById(page).style.display = "block";
 }
 
 function goHome(){
   document.getElementById("homePage").style.display = "block";
   document.getElementById("bhandaraPage").style.display = "none";
   document.getElementById("dhwajPage").style.display = "none";
+  document.getElementById("qrPage").style.display = "none";
 }
 
-function calculate(){
-  let flags = document.getElementById("flags").value || 0;
-  document.getElementById("total").innerText = "कुल राशि: ₹" + (flags * 200);
+function openQR(){
+  document.getElementById("bhandaraPage").style.display = "none";
+  document.getElementById("dhwajPage").style.display = "none";
+  document.getElementById("qrPage").style.display = "block";
 }
 
-function showQR(){
-  let boxes = document.querySelectorAll("#qrBox");
-  boxes.forEach(b => b.style.display = "block");
+function calc(){
+  let f = document.getElementById("flags").value || 0;
+  document.getElementById("total").innerText = "कुल राशि: ₹" + (f * 200);
 }
 </script>
 </body>
