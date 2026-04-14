@@ -131,18 +131,99 @@ input {
 <!-- MANTRA -->
 <div class="section">
 <h2>मंत्र</h2>
+
+<style>
+.mantra-btn {
+  background: linear-gradient(45deg, #ff6600, #cc0000);
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.mantra-screen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff7f0;
+  z-index: 999;
+  overflow-y: auto;
+}
+
+.mantra-content {
+  padding: 30px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 2;
+}
+
+.back-btn {
+  background: #cc0000;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+</style>
+
 <div class="cards">
+
 <div class="card">
-<p>॥ ॐ हनुमते नमः ॥</p>
+<button class="mantra-btn" onclick="openMantra('bajrang')">🚩 बजरंग बाण</button>
 </div>
+
 <div class="card">
-<p>॥ बजरंग बाण पाठ ॥</p>
+<button class="mantra-btn" onclick="openMantra('chalisa')">📜 हनुमान चालीसा</button>
 </div>
+
 <div class="card">
-<p>॥ हनुमान चालीसा ॥</p>
+<button class="mantra-btn" onclick="openMantra('aarti')">🪔 हनुमान आरती</button>
+</div>
+
 </div>
 </div>
+
+<!-- FULL SCREEN VIEW -->
+<div id="mantraScreen" class="mantra-screen">
+  <div class="mantra-content">
+    <button class="back-btn" onclick="closeMantra()">⬅ वापस जाएं</button>
+    <div id="mantraText"></div>
+  </div>
 </div>
+
+<script>
+function openMantra(type){
+  document.getElementById("mantraScreen").style.display = "block";
+
+  let text = "";
+
+  if(type === "bajrang"){
+    text = "<h2>🚩 बजरंग बाण</h2><p>यहाँ पूरा बजरंग बाण डालें</p>";
+  }
+
+  if(type === "chalisa"){
+    text = "<h2>📜 हनुमान चालीसा</h2><p>यहाँ पूरा हनुमान चालीसा डालें</p>";
+  }
+
+  if(type === "aarti"){
+    text = "<h2>🪔 हनुमान आरती</h2><p>यहाँ पूरी आरती डालें</p>";
+  }
+
+  document.getElementById("mantraText").innerHTML = text;
+}
+
+function closeMantra(){
+  document.getElementById("mantraScreen").style.display = "none";
+}
+</script>
 
 <!-- BUTTONS -->
 <div class="section">
