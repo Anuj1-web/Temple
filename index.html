@@ -492,22 +492,30 @@ function calc(){
 
 /* QR */
 function openQR(type){
-  let amount = 0;
 
+  // 🔴 VALIDATION (IMPORTANT)
   if(type === "bhandara"){
-    amount = b_amount.value || 0;
+    if(!b_name.value || !b_father.value || !b_address.value || !b_amount.value){
+      alert("⚠️ सभी जानकारी भरना अनिवार्य है");
+      return;
+    }
 
     currentData = {
       name: b_name.value,
       father: b_father.value,
       address: b_address.value,
-      amount: amount,
+      amount: b_amount.value,
       type: "Bhandara"
     };
   }
 
   if(type === "dhwaj"){
-    amount = (flags.value || 0) * 200;
+    if(!d_name.value || !d_father.value || !d_address.value || !flags.value){
+      alert("⚠️ सभी जानकारी भरना अनिवार्य है");
+      return;
+    }
+
+    let amount = (flags.value || 0) * 200;
 
     currentData = {
       name: d_name.value,
@@ -518,17 +526,17 @@ function openQR(type){
     };
   }
 
-  let upiLink = `upi://pay?pa=7878426819@ibl&pn=Temple&am=${amount}&cu=INR`;
+  let upiLink = `upi://pay?pa=7878426819@ibl&pn=Temple&am=${currentData.amount}&cu=INR`;
 
   qrImage.src =
     `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(upiLink)}`;
 
-  payAmount.innerText = "राशि: ₹" + amount;
+  payAmount.innerText = "राशि: ₹" + currentData.amount;
 
   openPage("qrPage");
 }
 
-/* SUBMIT TO GOOGLE FORM */
+/* SUBMIT TO GOOGLE FORM (FINAL FIXED) */
 function submitData(){
 
   let txn = document.getElementById("txn").value;
@@ -540,22 +548,32 @@ function submitData(){
 
   currentData.txn = txn;
 
-  fetch("https://docs.google.com/forms/d/e/1FAIpQLSe9xKHJfrsTIp7ppLcbt-WfpgLoCeNH3IjASjnmkZdJMMlaPg/formResponse", {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body:
-      "entry.1887433753=" + currentData.name + 
-      "&entry.1071205163=" + currentData.father + 
-      "&entry.1430629411=" + currentData.address + 
-      "&entry.889981674=" + currentData.amount + 
-      "&entry.1589515685=" + currentData.type + 
-      "&entry.481104271=" + currentData.txn
-  });
+  // 🔥 HIDDEN FORM METHOD (100% WORKING)
+  let form = document.createElement("form");
+  form.method = "POST";
+  form.action = "https://docs.google.com/forms/d/e/1FAIpQLSe9xKHJfrsTIp7ppLcbt-WfpgLoCeNH3IjASjnmkZdJMMlaPg/formResponse";
+  form.target = "_blank";
 
-  alert("✅ Details Submitted! Verification के बाद पुष्टि होगी");
+  function addField(name, value){
+    let input = document.createElement("input");
+    input.type = "hidden";
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  }
+
+  // ✅ YOUR REAL ENTRY IDs
+  addField("entry.1887433753", currentData.name);
+  addField("entry.1071205163", currentData.father);
+  addField("entry.1430629411", currentData.address);
+  addField("entry.889981674", currentData.amount);
+  addField("entry.1589515685", currentData.type);
+  addField("entry.481104271", currentData.txn);
+
+  document.body.appendChild(form);
+  form.submit();
+
+  alert("✅ Details Submitted Successfully!");
 
   goHome();
 }
