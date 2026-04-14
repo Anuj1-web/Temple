@@ -438,41 +438,37 @@ function closeMantra(){
   document.getElementById("mantraScreen").style.display = "none";
 }
 </script>
-<!-- DONATION CARDS -->
-<div class="section">
+<!-- DONATION CARDS (HOME) -->
+<div id="homePage" class="section">
   <h2>सेवा एवं दान</h2>
 
   <div class="cards">
-    <div class="card" onclick="openForm('bhandara')">
+    <div class="card" onclick="openPage('bhandaraPage')">
       <h3>🍛 मंदिर एवं भंडारा दान</h3>
-      <p>अपनी श्रद्धा अनुसार दान करें</p>
     </div>
 
-    <div class="card" onclick="openForm('dhwaj')">
+    <div class="card" onclick="openPage('dhwajPage')">
       <h3>🚩 ध्वज सेवा</h3>
-      <p>₹200 प्रति ध्वज</p>
     </div>
   </div>
 </div>
 
 <style>
-.form-popup {
+.page {
   display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  z-index: 999;
+  padding: 40px;
+  text-align: center;
 }
 
 .form-card {
   background: linear-gradient(135deg, #ff6600, #cc0000);
   color: white;
   padding: 25px;
-  border-radius: 12px;
-  max-width: 400px;
-  margin: 80px auto;
-  text-align: center;
+  border-radius: 15px;
+  max-width: 420px;
+  margin: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: fadeIn 0.5s ease;
 }
 
 .form-card input {
@@ -483,15 +479,7 @@ function closeMantra(){
   border-radius: 6px;
 }
 
-.close-btn {
-  background: black;
-  color: white;
-  padding: 5px 10px;
-  float: right;
-  cursor: pointer;
-}
-
-.pay-btn {
+.btn2 {
   background: white;
   color: #cc0000;
   padding: 10px 20px;
@@ -502,83 +490,93 @@ function closeMantra(){
   font-weight: bold;
 }
 
+.back {
+  margin-bottom: 20px;
+  cursor: pointer;
+  color: #cc0000;
+  font-weight: bold;
+}
+
 #qrBox {
   display: none;
-  text-align: center;
+  margin-top: 20px;
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(20px);}
+  to {opacity:1; transform: translateY(0);}
 }
 </style>
 
-<!-- FORM POPUP -->
-<div id="formPopup" class="form-popup">
+<!-- Bhandara Page -->
+<div id="bhandaraPage" class="page">
+  <div class="back" onclick="goHome()">⬅ वापस जाएं</div>
+
   <div class="form-card">
-    <span class="close-btn" onclick="closeForm()">X</span>
+    <h3>🍛 मंदिर एवं भंडारा दान</h3>
 
-    <h3 id="formTitle"></h3>
+    <input id="b_name" placeholder="नाम">
+    <input id="b_father" placeholder="पिता का नाम">
+    <input id="b_address" placeholder="पता">
+    <input id="b_amount" placeholder="दान राशि">
 
-    <input id="name" placeholder="नाम">
-    <input id="father" placeholder="पिता का नाम">
-    <input id="address" placeholder="पता">
-
-    <!-- Dynamic Fields -->
-    <div id="extraFields"></div>
-
-    <h3 id="totalAmount"></h3>
-
-    <button class="pay-btn" onclick="showQR()">Proceed to Pay</button>
+    <button class="btn2" onclick="showQR()">Proceed to Pay</button>
 
     <div id="qrBox">
-      <h3>भुगतान QR</h3>
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=UPI-ID-HERE">
+      <h3>भुगतान करें</h3>
+      <img src="https://github.com/Anuj1-web/Temple/blob/main/qr.png?raw=true" width="200">
+      <p>UPI से भुगतान करें</p>
+    </div>
+  </div>
+</div>
+
+<!-- Dhwaj Page -->
+<div id="dhwajPage" class="page">
+  <div class="back" onclick="goHome()">⬅ वापस जाएं</div>
+
+  <div class="form-card">
+    <h3>🚩 ध्वज सेवा</h3>
+
+    <input id="d_name" placeholder="नाम">
+    <input id="d_father" placeholder="पिता का नाम">
+    <input id="d_address" placeholder="पता">
+    <input id="flags" placeholder="ध्वज संख्या" oninput="calculate()">
+
+    <h3 id="total">कुल राशि: ₹0</h3>
+
+    <button class="btn2" onclick="showQR()">Proceed to Pay</button>
+
+    <div id="qrBox">
+      <h3>भुगतान करें</h3>
+      <img src="https://github.com/Anuj1-web/Temple/blob/main/qr.png?raw=true" width="200">
       <p>UPI से भुगतान करें</p>
     </div>
   </div>
 </div>
 
 <script>
-let currentType = "";
+function openPage(pageId){
+  document.getElementById("homePage").style.display = "none";
+  document.getElementById("bhandaraPage").style.display = "none";
+  document.getElementById("dhwajPage").style.display = "none";
 
-function openForm(type){
-  currentType = type;
-  document.getElementById("formPopup").style.display = "block";
-  document.getElementById("qrBox").style.display = "none";
-
-  let extra = "";
-  let title = "";
-  let amountText = "";
-
-  if(type === "bhandara"){
-    title = "🍛 मंदिर एवं भंडारा दान";
-
-    extra = `<input id="amount" placeholder="दान राशि">`;
-
-    amountText = "";
-  }
-
-  if(type === "dhwaj"){
-    title = "🚩 ध्वज सेवा";
-
-    extra = `<input id="flags" placeholder="ध्वज संख्या" oninput="calculate()">`;
-
-    amountText = "कुल राशि: ₹0";
-  }
-
-  document.getElementById("formTitle").innerText = title;
-  document.getElementById("extraFields").innerHTML = extra;
-  document.getElementById("totalAmount").innerText = amountText;
+  document.getElementById(pageId).style.display = "block";
 }
 
-function closeForm(){
-  document.getElementById("formPopup").style.display = "none";
+function goHome(){
+  document.getElementById("homePage").style.display = "block";
+  document.getElementById("bhandaraPage").style.display = "none";
+  document.getElementById("dhwajPage").style.display = "none";
 }
 
 function calculate(){
   let flags = document.getElementById("flags").value || 0;
-  let total = flags * 200;
-  document.getElementById("totalAmount").innerText = "कुल राशि: ₹" + total;
+  document.getElementById("total").innerText = "कुल राशि: ₹" + (flags * 200);
 }
 
 function showQR(){
-  document.getElementById("qrBox").style.display = "block";
+  let boxes = document.querySelectorAll("#qrBox");
+  boxes.forEach(b => b.style.display = "block");
 }
 </script>
 </body>
