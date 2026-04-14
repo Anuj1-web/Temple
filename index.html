@@ -431,7 +431,9 @@ function openMantra(type){
     `;
   }
 
-  document.getElementById("mantraText").innerHTML = text;
+  let box = document.getElementById("mantraText");
+box.innerHTML = "";
+box.innerHTML = text;
 }
 
 function closeMantra(){
