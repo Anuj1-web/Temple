@@ -460,6 +460,18 @@ function closeMantra(){
 
 <script>
 
+/* RESET FORMS */
+function resetForms(){
+  // clear all input fields
+  document.querySelectorAll("input").forEach(input => input.value = "");
+
+  // reset dhwaj total
+  let total = document.getElementById("total");
+  if(total){
+    total.innerText = "कुल राशि: ₹0";
+  }
+}
+
 /* PAGES */
 function openPage(page){
   document.getElementById("homePage").style.display = "none";
@@ -475,6 +487,8 @@ function goHome(){
   document.getElementById("bhandaraPage").style.display = "none";
   document.getElementById("dhwajPage").style.display = "none";
   document.getElementById("qrPage").style.display = "none";
+
+  resetForms(); // ✅ important fix
 }
 
 /* CALC */
@@ -504,6 +518,8 @@ function openQR(type){
   document.getElementById("payAmount").innerText = "राशि: ₹" + amount;
 
   openPage("qrPage");
+
+  resetForms(); // ✅ clears form after QR generation
 }
 
 </script>
