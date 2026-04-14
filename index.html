@@ -437,7 +437,6 @@ function openMantra(type){
 function closeMantra(){
   document.getElementById("mantraScreen").style.display = "none";
 }
-</script>
 <!-- HOME -->
 <div id="homePage" class="section">
   <h2>सेवा एवं दान</h2>
@@ -456,9 +455,15 @@ function closeMantra(){
 <style>
 .page {
   display: none;
-  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: #fff7f0;
   padding-top: 40px;
+  z-index: 1000;
+  overflow-y: auto;
 }
 
 /* PREMIUM FORM CARD */
@@ -510,7 +515,7 @@ function closeMantra(){
 /* QR PAGE */
 .qr-page {
   display: none;
-  position: fixed;   /* 🔥 same fix */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -520,6 +525,7 @@ function closeMantra(){
   padding-top: 60px;
   z-index: 1000;
 }
+
 .qr-box {
   background: white;
   padding: 25px;
@@ -528,10 +534,10 @@ function closeMantra(){
   box-shadow: 0 0 25px rgba(0,0,0,0.3);
 }
 
-/* CLEAN QR */
+/* RESPONSIVE QR */
 .qr-box img {
   width: 80%;
-  max-width: 320px;
+  max-width: 350px;
   height: auto;
   display: block;
   margin: auto;
@@ -553,9 +559,9 @@ function closeMantra(){
     <input placeholder="नाम">
     <input placeholder="पिता का नाम">
     <input placeholder="पता">
-    <input placeholder="दान राशि">
+    <input id="b_amount" placeholder="दान राशि">
 
-    <button class="btn2" onclick="openQR()">Proceed to Pay</button>
+    <button class="btn2" onclick="openQR('bhandara')">Proceed to Pay</button>
   </div>
 </div>
 
@@ -573,18 +579,20 @@ function closeMantra(){
 
     <h3 id="total">कुल राशि: ₹0</h3>
 
-    <button class="btn2" onclick="openQR()">Proceed to Pay</button>
+    <button class="btn2" onclick="openQR('dhwaj')">Proceed to Pay</button>
   </div>
 </div>
 
-<!-- QR PAGE (SEPARATE) -->
+<!-- QR PAGE -->
 <div id="qrPage" class="qr-page">
   <div class="back" onclick="goHome()">⬅ वापस जाएं</div>
 
   <div class="qr-box">
     <h3>भुगतान करें</h3>
-    <img src="https://raw.githubusercontent.com/Anuj1-web/Temple/main/qr.png.jpg">
-    <p>UPI से भुगतान करें</p>
+
+    <img id="qrImage">
+
+    <p id="payAmount"></p>
   </div>
 </div>
 
@@ -605,15 +613,41 @@ function goHome(){
   document.getElementById("qrPage").style.display = "none";
 }
 
-function openQR(){
-  document.getElementById("bhandaraPage").style.display = "none";
-  document.getElementById("dhwajPage").style.display = "none";
-  document.getElementById("qrPage").style.display = "block";
-}
-
 function calc(){
   let f = document.getElementById("flags").value || 0;
   document.getElementById("total").innerText = "कुल राशि: ₹" + (f * 200);
+}
+
+/* 🔥 DYNAMIC QR FUNCTION */
+function openQR(type){
+  let amount = 0;
+
+  // 👉 PUT YOUR REAL UPI ID HERE
+  let upiID = "7878426819@ibl";
+
+  if(type === "dhwaj"){
+    let flags = document.getElementById("flags").value || 0;
+    amount = flags * 200;
+  }
+
+  if(type === "bhandara"){
+    amount = document.getElementById("b_amount").value || 0;
+  }
+
+  // UPI LINK
+  let upiLink = `upi://pay?pa=${upiID}&pn=HanumanMandir&am=${amount}&cu=INR`;
+
+  // GENERATE QR
+  document.getElementById("qrImage").src =
+    `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(upiLink)}`;
+
+  // SHOW AMOUNT
+  document.getElementById("payAmount").innerText = "राशि: ₹" + amount;
+
+  // NAVIGATION
+  document.getElementById("bhandaraPage").style.display = "none";
+  document.getElementById("dhwajPage").style.display = "none";
+  document.getElementById("qrPage").style.display = "block";
 }
 </script>
 </body>
