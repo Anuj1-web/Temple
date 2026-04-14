@@ -460,16 +460,19 @@ function closeMantra(){
 
 <script>
 
-let currentData = {};
-
-/* RESET */
+/* RESET FORMS */
 function resetForms(){
+  // clear all input fields
   document.querySelectorAll("input").forEach(input => input.value = "");
+
+  // reset dhwaj total
   let total = document.getElementById("total");
-  if(total) total.innerText = "कुल राशि: ₹0";
+  if(total){
+    total.innerText = "कुल राशि: ₹0";
+  }
 }
 
-/* NAV */
+/* PAGES */
 function openPage(page){
   document.getElementById("homePage").style.display = "none";
   document.getElementById("bhandaraPage").style.display = "none";
@@ -480,8 +483,12 @@ function openPage(page){
 }
 
 function goHome(){
-  openPage("homePage");
-  resetForms();
+  document.getElementById("homePage").style.display = "block";
+  document.getElementById("bhandaraPage").style.display = "none";
+  document.getElementById("dhwajPage").style.display = "none";
+  document.getElementById("qrPage").style.display = "none";
+
+  resetForms(); // ✅ important fix
 }
 
 /* CALC */
@@ -492,90 +499,27 @@ function calc(){
 
 /* QR */
 function openQR(type){
-
-  // 🔴 VALIDATION (IMPORTANT)
-  if(type === "bhandara"){
-    if(!b_name.value || !b_father.value || !b_address.value || !b_amount.value){
-      alert("⚠️ सभी जानकारी भरना अनिवार्य है");
-      return;
-    }
-
-    currentData = {
-      name: b_name.value,
-      father: b_father.value,
-      address: b_address.value,
-      amount: b_amount.value,
-      type: "Bhandara"
-    };
-  }
+  let amount = 0;
+  let upiID = "7878426819@ibl";
 
   if(type === "dhwaj"){
-    if(!d_name.value || !d_father.value || !d_address.value || !flags.value){
-      alert("⚠️ सभी जानकारी भरना अनिवार्य है");
-      return;
-    }
-
-    let amount = (flags.value || 0) * 200;
-
-    currentData = {
-      name: d_name.value,
-      father: d_father.value,
-      address: d_address.value,
-      amount: amount,
-      type: "Dhwaj"
-    };
+    amount = (document.getElementById("flags").value || 0) * 200;
   }
 
-  let upiLink = `upi://pay?pa=7878426819@ibl&pn=Temple&am=${currentData.amount}&cu=INR`;
+  if(type === "bhandara"){
+    amount = document.getElementById("b_amount").value || 0;
+  }
 
-  qrImage.src =
+  let upiLink = `upi://pay?pa=${upiID}&pn=Temple&am=${amount}&cu=INR`;
+
+  document.getElementById("qrImage").src =
     `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(upiLink)}`;
 
-  payAmount.innerText = "राशि: ₹" + currentData.amount;
+  document.getElementById("payAmount").innerText = "राशि: ₹" + amount;
 
   openPage("qrPage");
-}
 
-/* SUBMIT TO GOOGLE FORM (FINAL FIXED) */
-function submitData(){
-
-  let txn = document.getElementById("txn").value;
-
-  if(!txn){
-    alert("⚠️ कृपया Transaction ID डालें");
-    return;
-  }
-
-  currentData.txn = txn;
-
-  // 🔥 HIDDEN FORM METHOD (100% WORKING)
-  let form = document.createElement("form");
-  form.method = "POST";
-  form.action = "https://docs.google.com/forms/d/e/1FAIpQLSe9xKHJfrsTIp7ppLcbt-WfpgLoCeNH3IjASjnmkZdJMMlaPg/formResponse";
-  form.target = "_blank";
-
-  function addField(name, value){
-    let input = document.createElement("input");
-    input.type = "hidden";
-    input.name = name;
-    input.value = value;
-    form.appendChild(input);
-  }
-
-  // ✅ YOUR REAL ENTRY IDs
-  addField("entry.1887433753", currentData.name);
-  addField("entry.1071205163", currentData.father);
-  addField("entry.1430629411", currentData.address);
-  addField("entry.889981674", currentData.amount);
-  addField("entry.1589515685", currentData.type);
-  addField("entry.481104271", currentData.txn);
-
-  document.body.appendChild(form);
-  form.submit();
-
-  alert("✅ Details Submitted Successfully!");
-
-  goHome();
+  resetForms(); // ✅ clears form after QR generation
 }
 
 </script>
