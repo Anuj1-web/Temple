@@ -104,29 +104,9 @@ input {
 
 <div class="hero">
 जय श्री राम 🚩
-</div>
-
-<!-- GALLERY -->
+<!-- MANTRA -->
 <div class="section">
-<h2>हनुमान जी के दर्शन</h2>
-<div class="cards">
-
-<div class="card">
-<img src="https://github.com/Anuj1-web/Temple/blob/main/temple2.jpg.png?raw=true">
-<p>मंदिर दर्शन</p>
-</div>
-
-<div class="card">
-<img src="https://github.com/Anuj1-web/Temple/blob/main/panchmukhi-hanuman.webp?raw=true">
-<p>पंचमुखी हनुमान</p>
-</div>
-
-<div class="card">
-<img src="https://github.com/Anuj1-web/Temple/blob/main/hanuman-shakti.webp?raw=true">
-<p>हनुमान जी शक्ति रूप</p>
-</div>
-</div>
-</div>
+<h2>मंत्र</h2>
 
 <style>
 .mantra-btn {
@@ -242,7 +222,7 @@ function openMantra(type){
     <div class="mantra-box">
       <h2>🚩 बजरंग बाण</h2>
       <pre>
-निश्चय प्रेम प्रतीति ते, विनय करैं सनमान ।
+ननिश्चय प्रेम प्रतीति ते, विनय करैं सनमान ।
 तेहि के कारज सकल शुभ, सिद्ध करें हनुमान ॥
 
 जय हनुमन्त संत हितकारी । सुन लीजै प्रभु अरज हमारी ॥
@@ -294,7 +274,7 @@ function openMantra(type){
     <div class="mantra-box">
       <h2>📜 हनुमान चालीसा</h2>
       <pre>
-श्री गुरु चरण सरोज रज, निज मनु मुकुरु सुधारि।
+श्रश्री गुरु चरण सरोज रज, निज मनु मुकुरु सुधारि।
 बरनऊँ रघुवर बिमल जसु, जो दायकु फल चारि॥ १ ॥
 बुद्धिहीन तनु जानिके, सुमिरौं पवन कुमार।
 बल बुद्धि विद्या देहु मोहि, हरहु कलेश विकार॥  २ ॥
@@ -431,9 +411,7 @@ function openMantra(type){
     `;
   }
 
-  let box = document.getElementById("mantraText");
-box.innerHTML = "";
-box.innerHTML = text;
+  document.getElementById("mantraText").innerHTML = text;
 }
 
 function closeMantra(){
