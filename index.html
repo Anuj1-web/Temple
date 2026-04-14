@@ -12,7 +12,6 @@ body {
   background: #fff7f0;
 }
 
-/* HEADER */
 header {
   background: linear-gradient(90deg, #ff6600, #cc0000);
   color: white;
@@ -22,7 +21,6 @@ header {
   font-weight: bold;
 }
 
-/* HERO */
 .hero {
   height: 90vh;
   background: url("https://github.com/Anuj1-web/Temple/blob/main/temple1.jpg.png?raw=true") center/cover;
@@ -34,13 +32,11 @@ header {
   font-size: 40px;
 }
 
-/* SECTION */
 .section {
   padding: 40px;
   text-align: center;
 }
 
-/* CARDS */
 .cards {
   display: flex;
   gap: 20px;
@@ -61,7 +57,6 @@ header {
   border-radius: 10px;
 }
 
-/* BUTTONS */
 .mantra-btn {
   background: linear-gradient(45deg, #ff6600, #cc0000);
   color: white;
@@ -113,15 +108,7 @@ header {
   font-family: 'Noto Serif Devanagari', serif;
   font-size: 20px;
   line-height: 2;
-  display: inline-block;
-  text-align: left;
-
-  color: #ffd700;   /* ✅ ADD THIS LINE (MOST IMPORTANT FIX) */
-
-  text-shadow: 
-    0 0 5px rgba(255, 215, 0, 0.7),
-    0 0 10px rgba(255, 165, 0, 0.5),
-    0 0 15px rgba(255, 140, 0, 0.3);
+  color: #ffd700;
 }
 
 .back-btn {
@@ -147,7 +134,6 @@ header {
 <h2>हनुमान जी के दर्शन</h2>
 
 <div class="cards">
-
 <div class="card">
 <img src="https://github.com/Anuj1-web/Temple/blob/main/temple2.jpg.png?raw=true">
 <p>मंदिर दर्शन</p>
@@ -162,7 +148,6 @@ header {
 <img src="https://github.com/Anuj1-web/Temple/blob/main/hanuman-shakti.webp?raw=true">
 <p>हनुमान जी शक्ति रूप</p>
 </div>
-
 </div>
 </div>
 
@@ -203,7 +188,10 @@ function openMantra(type){
     text = `
     <div class="mantra-box">
       <h2>🚩 बजरंग बाण</h2>
-      <pre>निश्चय प्रेम प्रतीति ते...</pre>
+      <pre>
+निश्चय प्रेम प्रतीति ते...
+जय हनुमान ॥
+      </pre>
     </div>`;
   }
 
@@ -211,7 +199,10 @@ function openMantra(type){
     text = `
     <div class="mantra-box">
       <h2>📜 हनुमान चालीसा</h2>
-      <pre>जय हनुमान ज्ञान गुन सागर...</pre>
+      <pre>
+जय हनुमान ज्ञान गुन सागर...
+राम दूत अतुलित बल धामा ॥
+      </pre>
     </div>`;
   }
 
@@ -219,7 +210,10 @@ function openMantra(type){
     text = `
     <div class="mantra-box">
       <h2>🪔 हनुमान आरती</h2>
-      <pre>आरती कीजै हनुमान लला की...</pre>
+      <pre>
+आरती कीजै हनुमान लला की...
+दुष्ट दलन रघुनाथ कला की ॥
+      </pre>
     </div>`;
   }
 
@@ -230,6 +224,7 @@ function closeMantra(){
   document.getElementById("mantraScreen").style.display = "none";
 }
 </script>
+
 <!-- HOME -->
 <div id="homePage" class="section">
   <h2>सेवा एवं दान</h2>
