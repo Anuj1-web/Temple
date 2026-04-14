@@ -411,6 +411,15 @@ function closeMantra(){
   width: 80%;
   max-width: 350px;
 }
+
+.receipt-box{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  max-width:400px;
+  margin:auto;
+  text-align:left;
+}
 </style>
 
 <!-- BHANDARA -->
@@ -420,9 +429,9 @@ function closeMantra(){
   <div class="form-card">
     <h3>🍛 मंदिर एवं भंडारा दान</h3>
 
-    <input placeholder="नाम">
-    <input placeholder="पिता का नाम">
-    <input placeholder="पता">
+    <input id="b_name" placeholder="नाम">
+    <input id="b_father" placeholder="पिता का नाम">
+    <input id="b_address" placeholder="पता">
     <input id="b_amount" placeholder="दान राशि">
 
     <button class="btn2" onclick="openQR('bhandara')">Proceed to Pay</button>
@@ -436,9 +445,9 @@ function closeMantra(){
   <div class="form-card">
     <h3>🚩 ध्वज सेवा</h3>
 
-    <input placeholder="नाम">
-    <input placeholder="पिता का नाम">
-    <input placeholder="पता">
+    <input id="d_name" placeholder="नाम">
+    <input id="d_father" placeholder="पिता का नाम">
+    <input id="d_address" placeholder="पता">
     <input id="flags" placeholder="ध्वज संख्या" oninput="calc()">
 
     <h3 id="total">कुल राशि: ₹0</h3>
@@ -455,71 +464,107 @@ function closeMantra(){
     <h3>भुगतान करें</h3>
     <img id="qrImage">
     <p id="payAmount"></p>
+
+    <button class="btn2" onclick="paymentDone()">✅ Payment Done</button>
+  </div>
+</div>
+
+<!-- RECEIPT -->
+<div id="receiptPage" class="page">
+  <div class="back" onclick="goHome()">⬅ वापस जाएं</div>
+
+  <div class="receipt-box" id="receiptContent">
+    <h2 style="text-align:center;">🚩 जय श्री राम 🚩</h2>
+    <h3 style="text-align:center;">बुढ़े वाले हनुमान जी मंदिर</h3>
+
+    <p id="r_name"></p>
+    <p id="r_father"></p>
+    <p id="r_address"></p>
+    <p id="r_amount"></p>
+  </div>
+
+  <div style="text-align:center;">
+    <button class="btn2" onclick="downloadReceipt()">📥 Download Receipt</button>
   </div>
 </div>
 
 <script>
 
-/* RESET FORMS */
-function resetForms(){
-  // clear all input fields
-  document.querySelectorAll("input").forEach(input => input.value = "");
+let currentData = {};
 
-  // reset dhwaj total
-  let total = document.getElementById("total");
-  if(total){
-    total.innerText = "कुल राशि: ₹0";
-  }
+/* RESET */
+function resetForms(){
+  document.querySelectorAll("input").forEach(i => i.value="");
+  document.getElementById("total").innerText = "कुल राशि: ₹0";
 }
 
-/* PAGES */
+/* NAV */
 function openPage(page){
-  document.getElementById("homePage").style.display = "none";
-  document.getElementById("bhandaraPage").style.display = "none";
-  document.getElementById("dhwajPage").style.display = "none";
-  document.getElementById("qrPage").style.display = "none";
-
-  document.getElementById(page).style.display = "block";
+  document.querySelectorAll(".page").forEach(p => p.style.display="none");
+  document.getElementById("homePage").style.display="none";
+  document.getElementById(page).style.display="block";
 }
 
 function goHome(){
-  document.getElementById("homePage").style.display = "block";
-  document.getElementById("bhandaraPage").style.display = "none";
-  document.getElementById("dhwajPage").style.display = "none";
-  document.getElementById("qrPage").style.display = "none";
-
-  resetForms(); // ✅ important fix
+  document.querySelectorAll(".page").forEach(p => p.style.display="none");
+  document.getElementById("homePage").style.display="block";
+  resetForms();
 }
 
 /* CALC */
 function calc(){
   let f = document.getElementById("flags").value || 0;
-  document.getElementById("total").innerText = "कुल राशि: ₹" + (f * 200);
+  document.getElementById("total").innerText = "कुल राशि: ₹" + (f*200);
 }
 
 /* QR */
 function openQR(type){
   let amount = 0;
-  let upiID = "7878426819@ibl";
 
-  if(type === "dhwaj"){
-    amount = (document.getElementById("flags").value || 0) * 200;
+  if(type==="bhandara"){
+    currentData = {
+      name: b_name.value,
+      father: b_father.value,
+      address: b_address.value,
+      amount: b_amount.value
+    };
+    amount = b_amount.value || 0;
   }
 
-  if(type === "bhandara"){
-    amount = document.getElementById("b_amount").value || 0;
+  if(type==="dhwaj"){
+    amount = (flags.value || 0)*200;
+    currentData = {
+      name: d_name.value,
+      father: d_father.value,
+      address: d_address.value,
+      amount: amount
+    };
   }
 
-  let upiLink = `upi://pay?pa=${upiID}&pn=Temple&am=${amount}&cu=INR`;
+  let upi = `upi://pay?pa=7878426819@ibl&pn=Temple&am=${amount}&cu=INR`;
 
-  document.getElementById("qrImage").src =
-    `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(upiLink)}`;
-
-  document.getElementById("payAmount").innerText = "राशि: ₹" + amount;
+  qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(upi)}`;
+  payAmount.innerText = "राशि: ₹" + amount;
 
   openPage("qrPage");
+}
 
-  resetForms(); // ✅ clears form after QR generation
+/* PAYMENT DONE */
+function paymentDone(){
+  r_name.innerText = "नाम: " + currentData.name;
+  r_father.innerText = "पिता: " + currentData.father;
+  r_address.innerText = "पता: " + currentData.address;
+  r_amount.innerText = "राशि: ₹" + currentData.amount;
+
+  openPage("receiptPage");
+}
+
+/* DOWNLOAD */
+function downloadReceipt(){
+  let printContent = document.getElementById("receiptContent").innerHTML;
+  let win = window.open("", "", "width=600,height=600");
+  win.document.write(printContent);
+  win.print();
 }
 
 </script>
