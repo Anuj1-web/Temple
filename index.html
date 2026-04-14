@@ -159,8 +159,23 @@ input {
 .mantra-content {
   padding: 30px;
   text-align: center;
+}
+
+.mantra-box {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  max-width: 800px;
+  margin: auto;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.mantra-box pre {
+  white-space: pre-wrap;
+  font-family: 'Noto Serif Devanagari', serif;
   font-size: 20px;
   line-height: 2;
+  text-align: left;
 }
 
 .back-btn {
@@ -206,15 +221,47 @@ function openMantra(type){
   let text = "";
 
   if(type === "bajrang"){
-    text = "<h2>🚩 बजरंग बाण</h2><p>यहाँ पूरा बजरंग बाण डालें</p>";
+    text = `
+    <div class="mantra-box">
+      <h2>🚩 बजरंग बाण</h2>
+      <pre>
+निश्चय प्रेम प्रतीति ते, विनय करैं सनमान ।
+तेहि के कारज सकल शुभ, सिद्ध करें हनुमान ॥
+
+जय हनुमन्त संत हितकारी ।
+      </pre>
+    </div>
+    `;
   }
 
   if(type === "chalisa"){
-    text = "<h2>📜 हनुमान चालीसा</h2><p>यहाँ पूरा हनुमान चालीसा डालें</p>";
+    text = `
+    <div class="mantra-box">
+      <h2>📜 हनुमान चालीसा</h2>
+      <pre>
+श्रीगुरु चरन सरोज रज, निज मनु मुकुरु सुधारि ।
+बरनउँ रघुबर बिमल जसु, जो दायकु फल चारि ॥
+
+बुद्धिहीन तनु जानिके, सुमिरौं पवन कुमार ।
+बल बुधि बिद्या देहु मोहिं, हरहु कलेस बिकार ॥
+      </pre>
+    </div>
+    `;
   }
 
   if(type === "aarti"){
-    text = "<h2>🪔 हनुमान आरती</h2><p>यहाँ पूरी आरती डालें</p>";
+    text = `
+    <div class="mantra-box">
+      <h2>🪔 हनुमान आरती</h2>
+      <pre>
+आरती कीजै हनुमान लला की।
+दुष्ट दलन रघुनाथ कला की॥
+
+जाके बल से गिरिवर कांपे।
+रोग दोष जाके निकट न झांके॥
+      </pre>
+    </div>
+    `;
   }
 
   document.getElementById("mantraText").innerHTML = text;
