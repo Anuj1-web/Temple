@@ -437,7 +437,7 @@ function openMantra(type){
 function closeMantra(){
   document.getElementById("mantraScreen").style.display = "none";
 }
-  <script>
+</script>
 <!-- HOME -->
 <div id="homePage" class="section">
   <h2>सेवा एवं दान</h2>
@@ -598,6 +598,34 @@ function closeMantra(){
 </div>
 
 <script>
+
+/* MANTRA */
+function openMantra(type){
+  document.getElementById("mantraScreen").style.display = "block";
+
+  let text = "";
+
+  if(type === "bajrang"){
+    text = document.getElementById("bajrangText").innerHTML;
+  }
+
+  if(type === "chalisa"){
+    text = document.getElementById("chalisaText").innerHTML;
+  }
+
+  if(type === "aarti"){
+    text = document.getElementById("aartiText").innerHTML;
+  }
+
+  document.getElementById("mantraText").innerHTML = text;
+}
+
+function closeMantra(){
+  document.getElementById("mantraScreen").style.display = "none";
+}
+
+
+/* PAGES */
 function openPage(page){
   document.getElementById("homePage").style.display = "none";
   document.getElementById("bhandaraPage").style.display = "none";
@@ -614,16 +642,17 @@ function goHome(){
   document.getElementById("qrPage").style.display = "none";
 }
 
+
+/* CALC */
 function calc(){
   let f = document.getElementById("flags").value || 0;
   document.getElementById("total").innerText = "कुल राशि: ₹" + (f * 200);
 }
 
-/* 🔥 DYNAMIC QR FUNCTION */
+
+/* QR */
 function openQR(type){
   let amount = 0;
-
-  // 👉 PUT YOUR REAL UPI ID HERE
   let upiID = "7878426819@ibl";
 
   if(type === "dhwaj"){
@@ -635,21 +664,18 @@ function openQR(type){
     amount = document.getElementById("b_amount").value || 0;
   }
 
-  // UPI LINK
-  let upiLink = `upi://pay?pa=${upiID}&pn=HanumanMandir&am=${amount}&cu=INR`;
+  let upiLink = `upi://pay?pa=${upiID}&pn=Temple&am=${amount}&cu=INR`;
 
-  // GENERATE QR
   document.getElementById("qrImage").src =
     `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(upiLink)}`;
 
-  // SHOW AMOUNT
   document.getElementById("payAmount").innerText = "राशि: ₹" + amount;
 
-  // NAVIGATION
   document.getElementById("bhandaraPage").style.display = "none";
   document.getElementById("dhwajPage").style.display = "none";
   document.getElementById("qrPage").style.display = "block";
 }
+
 </script>
 </body>
 </html>
