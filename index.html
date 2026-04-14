@@ -420,10 +420,10 @@ function closeMantra(){
   <div class="form-card">
     <h3>🍛 मंदिर एवं भंडारा दान</h3>
 
-    <input placeholder="नाम">
-    <input placeholder="पिता का नाम">
-    <input placeholder="पता">
-    <input id="b_amount" placeholder="दान राशि">
+    <input id="b_name" placeholder="नाम" required>
+    <input id="b_father" placeholder="पिता का नाम" required>
+    <input id="b_address" placeholder="पता" required>
+    <input id="b_amount" placeholder="दान राशि" required>
 
     <button class="btn2" onclick="openQR('bhandara')">Proceed to Pay</button>
   </div>
@@ -436,10 +436,10 @@ function closeMantra(){
   <div class="form-card">
     <h3>🚩 ध्वज सेवा</h3>
 
-    <input placeholder="नाम">
-    <input placeholder="पिता का नाम">
-    <input placeholder="पता">
-    <input id="flags" placeholder="ध्वज संख्या" oninput="calc()">
+    <input id="d_name" placeholder="नाम" required>
+    <input id="d_father" placeholder="पिता का नाम" required>
+    <input id="d_address" placeholder="पता" required>
+    <input id="flags" placeholder="ध्वज संख्या" oninput="calc()" required>
 
     <h3 id="total">कुल राशि: ₹0</h3>
 
@@ -455,40 +455,35 @@ function closeMantra(){
     <h3>भुगतान करें</h3>
     <img id="qrImage">
     <p id="payAmount"></p>
+
+    <!-- NEW FIELD -->
+    <input id="txn" placeholder="Transaction ID डालें">
+
+    <button class="btn2" onclick="submitForm()">Submit</button>
   </div>
 </div>
 
 <script>
 
-/* RESET FORMS */
-function resetForms(){
-  // clear all input fields
-  document.querySelectorAll("input").forEach(input => input.value = "");
+let formData = {};
 
-  // reset dhwaj total
-  let total = document.getElementById("total");
-  if(total){
-    total.innerText = "कुल राशि: ₹0";
-  }
+/* RESET */
+function resetForms(){
+  document.querySelectorAll("input").forEach(input => input.value = "");
+  document.getElementById("total").innerText = "कुल राशि: ₹0";
 }
 
-/* PAGES */
+/* PAGE CONTROL */
 function openPage(page){
-  document.getElementById("homePage").style.display = "none";
-  document.getElementById("bhandaraPage").style.display = "none";
-  document.getElementById("dhwajPage").style.display = "none";
-  document.getElementById("qrPage").style.display = "none";
-
-  document.getElementById(page).style.display = "block";
+  ["homePage","bhandaraPage","dhwajPage","qrPage"].forEach(p=>{
+    document.getElementById(p).style.display="none";
+  });
+  document.getElementById(page).style.display="block";
 }
 
 function goHome(){
-  document.getElementById("homePage").style.display = "block";
-  document.getElementById("bhandaraPage").style.display = "none";
-  document.getElementById("dhwajPage").style.display = "none";
-  document.getElementById("qrPage").style.display = "none";
-
-  resetForms(); // ✅ important fix
+  openPage("homePage");
+  resetForms();
 }
 
 /* CALC */
@@ -500,26 +495,59 @@ function calc(){
 /* QR */
 function openQR(type){
   let amount = 0;
-  let upiID = "7878426819@ibl";
+  let name, father, address;
 
-  if(type === "dhwaj"){
-    amount = (document.getElementById("flags").value || 0) * 200;
+  if(type==="bhandara"){
+    name = b_name.value;
+    father = b_father.value;
+    address = b_address.value;
+    amount = b_amount.value;
   }
 
-  if(type === "bhandara"){
-    amount = document.getElementById("b_amount").value || 0;
+  if(type==="dhwaj"){
+    name = d_name.value;
+    father = d_father.value;
+    address = d_address.value;
+    amount = (flags.value || 0)*200;
   }
 
-  let upiLink = `upi://pay?pa=${upiID}&pn=Temple&am=${amount}&cu=INR`;
+  if(!name || !father || !address || !amount){
+    alert("सभी जानकारी भरें");
+    return;
+  }
 
-  document.getElementById("qrImage").src =
-    `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(upiLink)}`;
+  formData = {name,father,address,amount,type};
 
-  document.getElementById("payAmount").innerText = "राशि: ₹" + amount;
+  let upiLink = `upi://pay?pa=7878426819@ibl&pn=Temple&am=${amount}&cu=INR`;
+
+  qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(upiLink)}`;
+  payAmount.innerText = "राशि: ₹"+amount;
 
   openPage("qrPage");
+}
 
-  resetForms(); // ✅ clears form after QR generation
+/* SUBMIT TO GOOGLE FORM */
+function submitForm(){
+  let txn = document.getElementById("txn").value;
+
+  if(!txn){
+    alert("Transaction ID डालें");
+    return;
+  }
+
+  let url = `https://docs.google.com/forms/d/e/1FAIpQLSe9xKHJfrsTIp7ppLcbt-WfpgLoCeNH3IjASjnmkZdJMMlaPg/formResponse?` +
+  `entry.1887433753=${formData.name}` +
+  `&entry.1071205163=${formData.father}` +
+  `&entry.1430629411=${formData.address}` +
+  `&entry.889981674=${formData.amount}` +
+  `&entry.1589515685=${formData.type}` +
+  `&entry.481104271=${txn}`;
+
+  fetch(url, {mode: "no-cors"});
+
+  alert("✅ Payment submitted successfully!");
+
+  goHome();
 }
 
 </script>
